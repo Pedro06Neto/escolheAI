@@ -1,27 +1,20 @@
 # coloqueAI
 
-Loja demonstrativa de óculos com catálogo filtrável, provador virtual em Canvas e checkout local em português.
-
-## Executar
-
-Na raiz do projeto, execute:
+Consultor de visagismo e provador virtual de óculos em português. Abra o projeto em um servidor estático. Com Python 3, execute na raiz:
 
 ```sh
 python3 -m http.server 8000 --bind 0.0.0.0
 ```
 
-Abra a porta 8000 pelo navegador. Para usar a webcam, acesse por HTTPS ou pelo localhost da máquina que executa o navegador. Autorize o uso da câmera e selecione **Tirar foto** ou envie uma imagem.
+Abra a porta 8000 no navegador. Para usar a câmera, acesse por HTTPS ou localhost e permita o vídeo. Também é possível enviar uma selfie.
 
-## Como funciona
+## Experiência
 
-- Cada armação usa uma ilustração SVG compartilhada pelo catálogo e pelo provador, com transparência adaptada para a selfie.
-- A análise facial é uma simulação local. O usuário pode selecionar o formato manualmente e ajustar a armação sobre a foto ou o vídeo ao vivo.
-- O carrinho preserva modelos, cores, lentes e quantidades no armazenamento local do navegador. O checkout é demonstrativo. Fotos e dados de entrega são mantidos em memória.
-- A aplicação usa HTML, CSS, Tailwind via CDN e JavaScript puro. Os estilos próprios, fotos, ícones e fontes locais permitem usar o site mesmo quando o CDN está indisponível.
+1. Experimente sete estilos e cinco materiais nos quatro retratos de demonstração (Lucas, Rafael, Camila e Mariana), na câmera ao vivo ou na sua foto. Cada retrato já abre com calibração e recomendações próprias. Arraste a armação ou use os ajustes finos para alinhar aos olhos.
+2. Ao enviar ou capturar uma foto, compare seu contorno com os seis formatos do guia visual. O diagnóstico e as notas são sugestões de estilo baseadas no formato que você identificar.
+3. Segure **Comparar antes e depois** para ocultar a armação. **Salvar foto com óculos** exporta a composição em PNG.
+4. **Escolher este estilo** guarda uma foto com o modelo, material e formato do rosto. Em **Minha escolha**, copie o resumo ou compartilhe pelo menu do dispositivo quando disponível.
 
-## Arquivos
+O processamento da imagem ocorre no navegador. Somente a escolha confirmada é gravada no armazenamento local. O compartilhamento usa recursos do dispositivo. Sem backend, compras ou pagamentos.
 
-- `index.html` — estrutura, provador, carrinho e checkout.
-- `styles.css` — layout responsivo e tipografia.
-- `app.js` — catálogo, SVGs, câmera, análise simulada e fluxo do pedido.
-- `assets/` — imagem editorial, ícone, fontes e licenças.
+HTML, CSS, JavaScript e Canvas. Imagens, fontes e SVGs locais.

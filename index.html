@@ -2,248 +2,181 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#254d40" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#faf9ff" />
     <meta
       name="description"
-      content="Descubra armações para o seu formato de rosto e experimente seus óculos no provador virtual coloqueAI."
+      content="Experimente armações no seu rosto e encontre seu estilo com o consultor de visagismo coloqueAI."
     />
-    <title>coloqueAI — Seu provador virtual</title>
-    <link rel="icon" href="assets/marca.svg" type="image/svg+xml" />
+    <title>coloqueAI — Estúdio de visagismo</title>
+    <link rel="icon" href="assets/marca.svg" />
     <link rel="stylesheet" href="styles.css" />
     <script defer src="app.js"></script>
-    <script async src="https://cdn.tailwindcss.com/3.4.17"></script>
   </head>
   <body>
     <header>
-      <div class="wrap nav">
-        <a class="brand" href="#" aria-label="coloqueAI, início"
-          ><i data-icon="glasses"></i>coloque<span>AI</span></a
+      <div class="wrap top">
+        <a class="brand" href="#provador" aria-label="coloqueAI, início"
+          ><span class="brand-icon"><i data-icon="glasses"></i></span
+          >coloque<span>AI</span></a
         >
         <nav aria-label="Navegação principal">
-          <a href="#como-funciona">Como funciona</a
-          ><a href="#catalogo">Catálogo</a>
+          <a href="#provador" class="active"><i data-icon="scan"></i>Provador</a
+          ><a href="#diagnostico"><i data-icon="scanFace"></i>Diagnóstico</a>
         </nav>
-        <div class="nav-actions">
-          <button class="bag" id="bagBtn" aria-label="Abrir carrinho">
-            <i data-icon="bag"></i><span class="bag-label">Carrinho</span
-            ><b id="count">0</b></button
-          ><button class="btn solid header-cta" data-open>
-            Descobrir meu óculos <i data-icon="arrow"></i>
-          </button>
-        </div>
-      </div>
-    </header>
-    <main>
-      <section class="hero">
-        <img
-          class="hero-photo"
-          src="assets/editorial.webp"
-          alt="Modelo usando óculos de sol ovais em tartaruga"
-        />
-        <div class="hero-fade"></div>
-        <div class="wrap hero-inner">
-          <div class="hero-copy">
-            <span class="eyebrow pill"
-              ><i data-icon="sparkles"></i> Provador virtual com IA</span
-            >
-            <h1>Um novo olhar<br /><em>sobre você.</em></h1>
-            <p>Experimente seu próximo óculos com Inteligência Artificial.</p>
-            <div class="hero-actions">
-              <button class="btn solid" data-open>
-                <i data-icon="scan"></i> Descobrir meu óculos</button
-              ><a class="btn ghost" href="#catalogo"
-                >Ver catálogo <i data-icon="arrow"></i
-              ></a>
-            </div>
-          </div>
-          <button class="photo-label" id="featured">
-            <span class="photo-icon"><i data-icon="glasses"></i></span
-            ><span><small>NA FOTO</small>Aurora Oval</span
-            ><i data-icon="upRight"></i>
-          </button>
-        </div>
-      </section>
-      <section class="steps" id="como-funciona" aria-label="Como funciona">
-        <div class="wrap step-grid">
-          <article>
-            <span class="step-icon"><i data-icon="camera"></i></span>
-            <div>
-              <small>PASSO 01</small>
-              <h3>Envie sua selfie</h3>
-              <p>Use a câmera ou escolha uma foto.</p>
-            </div>
-          </article>
-          <article>
-            <span class="step-icon"><i data-icon="scanFace"></i></span>
-            <div>
-              <small>PASSO 02</small>
-              <h3>Descubra seu formato</h3>
-              <p>A IA analisa os traços do seu rosto.</p>
-            </div>
-          </article>
-          <article>
-            <span class="step-icon"><i data-icon="glasses"></i></span>
-            <div>
-              <small>PASSO 03</small>
-              <h3>Experimente e compre</h3>
-              <p>Prove os modelos e escolha seu favorito.</p>
-            </div>
-          </article>
-        </div>
-      </section>
-      <section class="wrap collection" id="catalogo">
-        <div class="collection-head">
-          <div>
-            <div class="eyebrow section-tag"><span></span> Nosso catálogo</div>
-            <h2>Explore a coleção</h2>
-          </div>
-          <div class="filters" aria-label="Filtrar por categoria">
-            <button data-filter="Todos" aria-pressed="true">Todos</button
-            ><button data-filter="Grau" aria-pressed="false">
-              Óculos de grau</button
-            ><button data-filter="Sol" aria-pressed="false">
-              Óculos de sol
-            </button>
-          </div>
-        </div>
-        <div id="products" class="products"></div>
-      </section>
-    </main>
-    <footer>
-      <div class="wrap">
-        <a class="brand" href="#"
-          ><i data-icon="glasses"></i>coloque<span>AI</span></a
-        ><a href="#catalogo">Voltar ao catálogo ↑</a>
-      </div>
-    </footer>
-    <dialog id="studio" class="studio modal">
-      <div class="modal-head">
-        <div>
-          <div class="eyebrow section-tag">Provador virtual</div>
-          <h2>Seu espelho digital</h2>
-        </div>
-        <button class="close" data-close aria-label="Fechar provador">
-          <i data-icon="x"></i>
+        <button class="saved-link" id="myChoice">
+          <i data-icon="bookmark"></i>Minha escolha
         </button>
       </div>
-      <div class="studio-grid">
-        <div>
+    </header>
+    <main class="wrap" id="provador">
+      <div class="intro">
+        <p class="eyebrow"><i data-icon="sparkles"></i> Estúdio de visagismo</p>
+        <h1>Provador virtual<span>.</span></h1>
+        <p>
+          Explore armações no seu rosto e descubra o estilo que combina com
+          você.
+        </p>
+      </div>
+      <div class="workspace">
+        <section class="panel viewer" aria-label="Prévia do provador">
+          <div class="viewer-head">
+            <div class="panel-title">
+              <i data-icon="scan"></i>
+              <h2>Seu espelho</h2>
+            </div>
+            <div class="sources">
+              <button id="camera" class="outline">
+                <i data-icon="camera"></i><span>Abrir câmera</span></button
+              ><button class="outline" id="upload">
+                <i data-icon="upload"></i>Enviar selfie
+              </button>
+            </div>
+            <input hidden type="file" id="file" accept="image/*" />
+          </div>
           <div class="stage">
             <canvas
               id="mirror"
-              width="800"
-              height="680"
-              aria-label="Prévia da selfie com a armação"
+              width="1320"
+              height="880"
+              aria-label="Rosto com a armação selecionada"
             ></canvas>
-            <div id="emptyMirror">
-              <i data-icon="scanFace"></i
-              ><strong>Sua selfie aparece aqui</strong
-              ><span>Use uma foto de frente e com boa luz.</span>
+            <div class="badge">
+              <span></span><b id="sourceName">Demonstração</b>
             </div>
+            <div class="scan-lines" aria-hidden="true">
+              <b></b><b></b><b></b><b></b>
+            </div>
+            <span class="model-caption"
+              ><i data-icon="glasses"></i><b id="caption">Wayfarer</b
+              ><span>·</span><span id="capColor">Preto Fosco</span></span
+            ><button class="stop-camera" hidden id="stopCam">
+              Desligar câmera
+            </button>
           </div>
-          <div class="source-actions">
-            <button class="btn solid" id="camera">
-              <i data-icon="camera"></i>Abrir câmera</button
-            ><label class="btn outline" for="file"
-              ><i data-icon="upload"></i>Enviar selfie</label
-            ><input class="file" id="file" type="file" accept="image/*" />
+          <div
+            id="demoPicker"
+            class="demo-picker"
+            role="group"
+            aria-label="Modelos de demonstração"
+          ></div>
+          <div class="viewer-footer">
+            <button id="compare" title="Segure para ver sem a armação">
+              <i data-icon="compare"></i>Comparar antes e depois</button
+            ><span></span
+            ><button id="savePhoto">
+              <i data-icon="download"></i>Salvar foto com óculos
+            </button>
           </div>
-          <p class="note" id="status" role="status">
-            Sua imagem é processada neste navegador.
-          </p>
-        </div>
-        <div class="settings">
-          <label for="shape">Formato do rosto</label
-          ><select id="shape">
-            <option value="">Escolher formato manualmente</option>
-            <option>Oval</option>
-            <option>Redondo</option>
-            <option>Quadrado</option>
-            <option>Coração</option>
-            <option>Diamante</option>
-          </select>
-          <div id="analysis" hidden>
-            <span>Mapeando pontos faciais...</span
-            ><progress id="progress" max="100" value="0"></progress>
+        </section>
+        <section class="panel customization">
+          <div class="panel-title">
+            <i data-icon="sliders"></i>
+            <h2>Personalize sua armação</h2>
           </div>
-          <p class="rec" id="rec">
-            Envie uma selfie para simular a análise facial ou selecione seu
-            formato.
-          </p>
-          <label for="model">Armação</label
-          ><select id="model"></select>
-          <div class="adjust-title">
-            <strong>Ajustes da armação</strong
-            ><button id="reset" class="textbtn">Redefinir</button>
+          <h3 class="field">Estilo da armação</h3>
+          <div
+            class="style-grid"
+            id="styleGrid"
+            aria-label="Estilo da armação"
+          ></div>
+          <div class="material-area">
+            <h3 class="field">
+              Cor e material <span id="materialName">Preto Fosco</span>
+            </h3>
+            <div
+              id="materials"
+              class="materials"
+              aria-label="Cor e material da armação"
+            ></div>
           </div>
-          <div id="sliders"></div>
-          <button class="btn solid wide" id="studioBuy">
-            Comprar armação <i data-icon="bag"></i>
+          <details id="adjustments">
+            <summary>
+              <i data-icon="tune"></i>Ajustes finos<i data-icon="down"></i>
+            </summary>
+            <div id="controls"></div>
+            <button id="reset" class="text-button">Redefinir ajustes</button>
+          </details>
+          <button class="primary choose" id="choose">
+            <i data-icon="bookmark"></i>Escolher este estilo<i
+              data-icon="arrow"
+            ></i>
+          </button>
+        </section>
+      </div>
+      <p id="status" role="status"></p>
+      <section id="diagnostico" class="panel diagnosis">
+        <div class="diagnosis-top">
+          <span class="feature-icon"><i data-icon="sparkles"></i></span>
+          <div>
+            <p class="eyebrow">Análise guiada</p>
+            <h2>Diagnóstico de visagismo</h2>
+            <p id="diagnosisLead">
+              Identifique o formato do seu rosto e descubra quais armações
+              valorizam seus traços.
+            </p>
+          </div>
+          <button id="openGuide" class="lavender">
+            Identificar meu formato <i data-icon="arrow"></i>
           </button>
         </div>
-      </div>
-    </dialog>
-    <dialog id="cart" class="drawer">
-      <div class="modal-head">
-        <h2>Seu carrinho</h2>
-        <button data-close class="close" aria-label="Fechar carrinho">
-          <i data-icon="x"></i>
-        </button>
-      </div>
-      <div id="cartItems"></div>
-      <div id="cartFoot"></div>
-    </dialog>
-    <dialog id="checkout" class="modal checkout">
-      <div class="modal-head">
-        <h2>Finalizar pedido</h2>
-        <button class="close" data-close aria-label="Fechar checkout">
-          <i data-icon="x"></i>
-        </button>
-      </div>
-      <div id="orderSummary"></div>
-      <form id="delivery">
-        <h3>Dados de entrega</h3>
-        <label
-          >Nome completo<input
-            required
-            autocomplete="name"
-            name="nome" /></label
-        ><label
-          >E-mail<input required type="email" autocomplete="email" name="email"
-        /></label>
-        <div class="form-row">
-          <label
-            >CEP<input
-              required
-              pattern="[0-9]{5}-?[0-9]{3}"
-              placeholder="00000-000"
-              autocomplete="postal-code"
-              name="cep" /></label
-          ><label
-            >Cidade e UF<input
-              required
-              autocomplete="address-level2"
-              name="cidade"
-          /></label>
+        <div id="results" hidden></div>
+      </section>
+    </main>
+    <dialog id="guide">
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">Visagismo</p>
+          <h2>Qual é o seu formato?</h2>
         </div>
-        <label
-          >Endereço com número e bairro<input
-            required
-            autocomplete="street-address"
-            name="endereco"
-        /></label>
-        <p class="note">Compra demonstrativa, sem cobrança ou envio.</p>
-        <button class="btn solid wide">
-          Confirmar compra <i data-icon="arrow"></i>
+        <button data-close class="circle" aria-label="Fechar guia">
+          <i data-icon="x"></i>
         </button>
-      </form>
+      </div>
+      <p>
+        Compare a testa, as maçãs do rosto e a mandíbula. Toque no contorno mais
+        parecido com o seu.
+      </p>
+      <div class="guide-content">
+        <img
+          id="reference"
+          alt="Imagem de referência para comparar seu contorno facial"
+        />
+        <div id="shapes" class="shapes"></div>
+      </div>
     </dialog>
-    <dialog id="success" class="modal success">
-      <i data-icon="check"></i>
-      <h2>Pedido confirmado!</h2>
-      <p>Sua compra demonstrativa foi concluída com sucesso.</p>
-      <button class="btn solid" data-close>Voltar ao catálogo</button>
+    <dialog id="choice">
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">Sua seleção</p>
+          <h2>Meu estilo escolhido</h2>
+        </div>
+        <button data-close class="circle" aria-label="Fechar escolha">
+          <i data-icon="x"></i>
+        </button>
+      </div>
+      <div id="choiceBody"></div>
+      <p role="status" id="choiceStatus"></p>
     </dialog>
   </body>
 </html>

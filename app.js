@@ -2,9 +2,18 @@
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const icons = {
+  bookmark: '<path d="M6 4h12v17l-6-4-6 4z"/>',
+  compare:
+    '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M12 3v18"/>',
+  download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/>',
+  sliders:
+    '<path d="M4 7h4m4 0h8M4 17h10m4 0h2"/><circle cx="10" cy="7" r="2"/><circle cx="16" cy="17" r="2"/>',
+  tune: '<path d="M5 5v14m7-14v14m7-14v14M2 10h6m1 5h6m1-7h6"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  copy: '<rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/>',
+  share: '<path d="M12 15V3m-4 4 4-4 4 4M7 10H4v11h16V10h-3"/>',
   glasses:
     '<path d="m2 14 2-8q.3-1.5 2-1m16 9-2-8q-.3-1.5-2-1M10.6 13q1.4-1.8 2.8 0"/><circle cx="6.2" cy="14.6" r="4.3"/><circle cx="17.8" cy="14.6" r="4.3"/>',
-  bag: '<path d="M5 7h14l1 14H4L5 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/>',
   arrow: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
   upRight: '<path d="M6 18 18 6M7 6h11v11"/>',
   sparkles:
@@ -17,7 +26,6 @@ const icons = {
   upload: '<path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/>',
   x: '<path d="m6 6 12 12M18 6 6 18"/>',
   check: '<path d="m4 12 5 5L20 6"/>',
-  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
 };
 function icon(name) {
   return (
@@ -28,107 +36,12 @@ function icon(name) {
 }
 $$("[data-icon]").forEach((el) => (el.innerHTML = icon(el.dataset.icon)));
 const palette = {
-  Preto: "#282825",
-  Tartaruga: "#714528",
-  Oliva: "#596443",
-  Mel: "#ae8051",
-  Dourado: "#ad8a4e",
-  Prata: "#8c9495",
-  Vinho: "#73383e",
-  Grafite: "#515552",
+  "Preto Fosco": "#2d2b30",
+  Tartaruga: "#855235",
+  "Dourado Fino": "#b8944d",
+  Prata: "#8b939e",
+  Transparente: "#c4c6cc",
 };
-const models = [
-  [
-    "Atlas Classic",
-    "Quadrado",
-    "Grau",
-    249,
-    "Preto Tartaruga Oliva",
-    "#eeeee6",
-    "Redondo Coração",
-  ],
-  [
-    "Aurora Oval",
-    "Oval",
-    "Sol",
-    289,
-    "Tartaruga Preto Mel",
-    "#f2eae1",
-    "Oval Quadrado Diamante",
-  ],
-  [
-    "Luna Retrô",
-    "Redondo",
-    "Grau",
-    219,
-    "Dourado Prata Grafite",
-    "#e9ede5",
-    "Quadrado Diamante",
-  ],
-  [
-    "Aero Aviador",
-    "Aviador",
-    "Sol",
-    329,
-    "Dourado Grafite Prata",
-    "#ece9df",
-    "Oval Coração",
-  ],
-  [
-    "Mia Gatinho",
-    "Gatinho",
-    "Grau",
-    259,
-    "Vinho Preto Tartaruga",
-    "#f3e9e7",
-    "Diamante Redondo",
-  ],
-  [
-    "Bossa Club",
-    "Clubmaster",
-    "Sol",
-    299,
-    "Tartaruga Preto Oliva",
-    "#e9ede5",
-    "Oval Redondo",
-  ],
-  [
-    "Prisma Geo",
-    "Geométrico",
-    "Grau",
-    279,
-    "Prata Dourado Preto",
-    "#ebecee",
-    "Redondo Oval",
-  ],
-  [
-    "Sprint Sport",
-    "Esportivo",
-    "Sol",
-    319,
-    "Grafite Preto Oliva",
-    "#e9ece5",
-    "Quadrado Oval",
-  ],
-  [
-    "Linea Titânio",
-    "Minimalista",
-    "Grau",
-    359,
-    "Prata Dourado Grafite",
-    "#eeebe6",
-    "Coração Diamante",
-  ],
-].map(([name, shape, category, price, colors, bg, faces], id) => ({
-  id,
-  name,
-  shape,
-  category,
-  price,
-  colors: colors.split(" "),
-  bg,
-  faces: faces.split(" "),
-}));
 const geometry = [
   "M25 53Q61 43 125 51Q139 53 136 69L129 96Q125 110 102 112L62 111Q44 110 38 99L25 68Q20 57 25 53Z",
   "M24 65C32 48 74 42 113 48C138 51 141 66 132 83C122 102 92 113 60 110C28 108 15 86 24 65Z",
@@ -143,14 +56,12 @@ const geometry = [
 const weights = [9, 10, 3.2, 3.7, 8, 4.5, 3.5, 8, 2.7];
 let serial = 0;
 function frame(id, color, tryOn = false) {
-  const m = models[id],
-    c = palette[color],
+  const c = palette[color],
     u = "g" + ++serial,
-    w = weights[id],
+    w = color === "Dourado Fino" ? Math.min(4, weights[id]) : weights[id],
     d = geometry[id],
-    sun = m.category === "Sol",
     tort = color === "Tartaruga";
-  const lens = sun ? (id === 1 ? "#412b1e" : "#37423a") : "#c0d2cf";
+  const lens = "#c0d2cf";
   const half =
     '<path d="' +
     d +
@@ -173,7 +84,7 @@ function frame(id, color, tryOn = false) {
     '<g clip-path="url(#' +
     u +
     'clip)"><path d="m35 103 46-63h13l-46 67zm18 9 46-69h5l-45 70z" fill="white" opacity="' +
-    (sun ? ".06" : ".21") +
+    (tryOn ? ".05" : ".21") +
     '"/></g>' +
     (id === 5
       ? '<path d="M24 61Q45 39 126 50L137 56l-3 9Q84 45 28 69Z" fill="' +
@@ -190,7 +101,9 @@ function frame(id, color, tryOn = false) {
     w * 0.65 +
     '" stroke-linecap="round"/><path d="m105 37 10 1" stroke="#dbcbb5" opacity=".6" stroke-width="1.5"/>';
   return (
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 156" aria-hidden="true"><defs><clipPath id="' +
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' +
+    (tryOn ? "0 0 300 156" : "9 24 282 106") +
+    '" aria-hidden="true"><defs><clipPath id="' +
     u +
     'clip"><path d="' +
     d +
@@ -211,11 +124,11 @@ function frame(id, color, tryOn = false) {
     'l" x2=".2" y2="1"><stop stop-color="' +
     lens +
     '" stop-opacity="' +
-    (tryOn ? (sun ? 0.35 : 0.08) : sun ? 0.97 : 0.22) +
+    (tryOn ? 0.05 : 0.22) +
     '"/><stop offset="1" stop-color="' +
     lens +
     '" stop-opacity="' +
-    (tryOn ? (sun ? 0.16 : 0.02) : sun ? 0.69 : 0.06) +
+    (tryOn ? 0.01 : 0.06) +
     '"/></linearGradient><pattern id="' +
     u +
     'p" width="23" height="15" patternUnits="userSpaceOnUse" patternTransform="rotate(-20)"><path d="m3 0 4 4-2 5-6-1zm13 8 4-2 4 4-3 5-6-2z" fill="#33271e"/><path d="m9 3 3-2 1 4-3 3z" fill="#b57d49"/></pattern></defs>' +
@@ -241,417 +154,748 @@ function frame(id, color, tryOn = false) {
     "</g></svg>"
   );
 }
-const money = (n) =>
-  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-const colors = models.map((m) => m.colors[0]);
-let filter = "Todos",
-  selected = 0,
-  face = "";
-const reasons = {
-  Oval: "As proporções equilibradas do rosto oval combinam com armações de linhas marcantes, como aviadores e geométricas.",
-  Redondo:
-    "Armações quadradas ou geométricas criam contraste e ajudam a alongar a face.",
-  Quadrado: "Curvas arredondadas e ovais suavizam as linhas da mandíbula.",
-  Coração:
-    "Armações leves ou com volume na base equilibram a testa mais larga e o queixo fino.",
-  Diamante:
-    "Modelos ovais e gatinho destacam os olhos e equilibram as maçãs do rosto.",
+const styles = [
+  { name: "Wayfarer", id: 0, sample: "Preto Fosco" },
+  { name: "Aviador", id: 3, sample: "Dourado Fino" },
+  { name: "Redondo", id: 2, sample: "Tartaruga" },
+  { name: "Gatinho", id: 4, sample: "Tartaruga" },
+  { name: "Clubmaster", id: 5, sample: "Preto Fosco" },
+  { name: "Retangular Fino", id: 8, sample: "Prata" },
+  { name: "Geométrico", id: 6, sample: "Dourado Fino" },
+];
+const profiles = {
+  Oval: {
+    contour: "M20 4C40 4 39 33 29 45Q20 56 11 45C1 33 0 4 20 4Z",
+    hint: "Comprido e equilibrado",
+    diagnosis:
+      "Seu rosto tem proporções equilibradas e contorno suave. Armações bem definidas realçam as maçãs do rosto e mantêm esse equilíbrio.",
+    matches: [
+      ["Wayfarer", 98],
+      ["Aviador", 96],
+      ["Geométrico", 94],
+    ],
+    avoid:
+      "Se quiser preservar o equilíbrio natural, evite armações muito mais largas que as têmporas.",
+  },
+  Redondo: {
+    contour: "M20 7C42 7 43 47 20 49C-3 47 -2 7 20 7Z",
+    hint: "Bochechas arredondadas",
+    diagnosis:
+      "Seu rosto tem traços arredondados. Linhas quadradas ou retangulares criam contraste e dão a impressão de uma face mais alongada.",
+    matches: [
+      ["Wayfarer", 98],
+      ["Retangular Fino", 96],
+      ["Geométrico", 94],
+    ],
+    avoid:
+      "Se busca mais definição, evite armações redondas pequenas, que repetem as curvas das bochechas.",
+  },
+  Quadrado: {
+    contour: "M6 8Q20 2 34 8Q38 16 35 40Q34 48 26 49H14Q6 48 5 40Q2 15 6 8Z",
+    hint: "Mandíbula marcada",
+    diagnosis:
+      "A largura da testa e a mandíbula marcada dão estrutura ao seu rosto. Lentes curvas suavizam os ângulos e trazem leveza ao olhar.",
+    matches: [
+      ["Redondo", 98],
+      ["Aviador", 96],
+      ["Gatinho", 92],
+    ],
+    avoid:
+      "Se quiser suavizar a mandíbula, evite armações retangulares espessas e muito angulares.",
+  },
+  Coração: {
+    contour: "M3 16C2 3 14 3 20 8C28 2 39 4 38 16Q36 33 20 50Q5 33 3 16Z",
+    hint: "Testa larga e queixo fino",
+    diagnosis:
+      "A parte superior do seu rosto é mais ampla e o queixo é delicado. Curvas e aros finos distribuem o destaque entre os olhos e a base do rosto.",
+    matches: [
+      ["Aviador", 98],
+      ["Redondo", 95],
+      ["Retangular Fino", 93],
+    ],
+    avoid:
+      "Se quiser equilibrar a testa, evite armações com o topo muito pesado ou pontas muito elevadas.",
+  },
+  Triangular: {
+    contour:
+      "M13 6Q20 3 27 6Q33 11 38 39Q39 45 29 49Q20 53 11 49Q1 45 2 39Q7 11 13 6Z",
+    hint: "Mandíbula mais larga",
+    diagnosis:
+      "Sua mandíbula é mais larga que a testa. Armações com destaque na parte superior direcionam o olhar para as sobrancelhas e equilibram as proporções.",
+    matches: [
+      ["Gatinho", 98],
+      ["Clubmaster", 97],
+      ["Wayfarer", 93],
+    ],
+    avoid:
+      "Se quiser equilibrar a base do rosto, evite aviadores de aro grosso com grande volume inferior.",
+  },
+  Diamante: {
+    contour:
+      "M14 6Q20 2 26 6L38 25Q39 29 35 34L24 48Q20 52 16 48L5 34Q1 29 2 25Z",
+    hint: "Maçãs do rosto largas",
+    diagnosis:
+      "As maçãs do rosto se destacam entre a testa e o queixo mais estreitos. Pontas elevadas ou lentes curvas valorizam os olhos e equilibram as laterais.",
+    matches: [
+      ["Gatinho", 98],
+      ["Redondo", 95],
+      ["Clubmaster", 93],
+    ],
+    avoid:
+      "Se quiser suavizar as laterais, evite armações geométricas muito estreitas na linha das maçãs do rosto.",
+  },
 };
-function renderProducts() {
-  $("#products").innerHTML = models
-    .filter((m) => filter === "Todos" || m.category === filter)
-    .map(
-      (m) =>
-        `<article class="card" data-id="${m.id}"><div class="product-art" style="--bg:${m.bg}">${frame(m.id, colors[m.id])}<span class="tag"><i>${icon(m.category === "Sol" ? "sun" : "glasses")}</i>Óculos de ${m.category.toLowerCase()}</span>${m.faces.includes(face) ? '<span class="match">Combina com seu rosto</span>' : ""}</div><div class="card-info"><div class="product-name"><div><h3>${m.name}</h3><p class="muted">${m.shape}</p></div><div class="swatches">${m.colors.map((c) => `<button class="swatch" style="--sw:${palette[c]}" aria-label="Cor ${c}" title="${c}" aria-pressed="${colors[m.id] === c}" data-color="${c}"></button>`).join("")}</div></div><p class="price">${money(m.price)}</p><div class="card-actions"><button class="btn outline" data-try><i>${icon("scan")}</i>Provar no Rosto</button><button class="btn solid" data-buy>Comprar</button></div></div></article>`,
-    )
-    .join("");
-}
-$$("[data-filter]").forEach(
-  (b) =>
-    (b.onclick = () => {
-      filter = b.dataset.filter;
-      $$("[data-filter]").forEach((el) =>
-        el.setAttribute("aria-pressed", el === b),
-      );
-      renderProducts();
-    }),
-);
-$("#products").onclick = (e) => {
-  const b = e.target.closest("button");
-  if (!b) return;
-  const id = Number(b.closest("article").dataset.id);
-  if (b.dataset.color) {
-    colors[id] = b.dataset.color;
-    renderProducts();
-    $(`[data-id="${id}"] [data-color="${colors[id]}"]`).focus();
-  } else if (b.hasAttribute("data-try")) openStudio(id);
-  else addItem(id);
-};
-function closeDialogs() {
-  for (const d of $$("dialog[open]")) d.close();
-}
-$$("[data-close]").forEach(
-  (b) => (b.onclick = () => b.closest("dialog").close()),
-);
-$$("dialog").forEach((d) =>
-  d.addEventListener("click", (e) => {
-    if (e.target !== d) return;
-    const r = d.getBoundingClientRect();
-    if (
-      e.clientX < r.left ||
-      e.clientX > r.right ||
-      e.clientY < r.top ||
-      e.clientY > r.bottom
-    )
-      d.close();
-  }),
-);
-const canvas = $("#mirror"),
-  ctx = canvas.getContext("2d"),
-  video = document.createElement("video");
-video.autoplay = true;
+let style = styles[0],
+  material = "Preto Fosco",
+  face = "",
+  source = "demo",
+  photo = null;
+let overlay = null,
+  overlayVersion = 0,
+  mediaVersion = 0,
+  stream = null,
+  animation = 0,
+  comparing = false;
+let pendingChoice = false,
+  saved = null;
+const canvas = $("#mirror");
+const video = document.createElement("video");
 video.muted = true;
 video.playsInline = true;
-let stream = null,
-  photo = null,
-  overlay = null,
-  anim = 0,
-  token = 0,
-  job = 0,
-  timer;
-const ranges = [
-  ["scale", "Tamanho", 30, 100, 58, "%"],
-  ["horizontal", "Horizontal", -50, 50, 0, "%"],
-  ["vertical", "Vertical", -50, 50, 0, "%"],
-  ["rotation", "Rotação", -45, 45, 0, "°"],
+// Position and width are percentages of the uncropped portrait; angle is in degrees.
+const portraits = [
+  {
+    name: "Lucas",
+    face: "Quadrado",
+    src: "assets/lucas.webp",
+    fit: { x: 50.1, y: 38.8, size: 36.2, angle: -0.8 },
+    diagnosis:
+      "A mandíbula marcada de Lucas ganha contraste com aros redondos e aviadores. As curvas inferiores do Clubmaster também suavizam os ângulos.",
+    matches: [
+      ["Redondo", 98],
+      ["Aviador", 96],
+      ["Clubmaster", 93],
+    ],
+    avoid: [
+      ["Retangular Fino", 58],
+      ["Geométrico", 54],
+    ],
+    reason: "Linhas muito retas podem reforçar os ângulos da mandíbula.",
+  },
+  {
+    name: "Rafael",
+    face: "Redondo",
+    src: "assets/rafael.webp",
+    fit: { x: 49.5, y: 40.3, size: 36.8, angle: -0.5 },
+    diagnosis:
+      "As bochechas arredondadas de Rafael contrastam com os cantos do Wayfarer. Armações retangulares ou geométricas também dão definição ao rosto.",
+    matches: [
+      ["Wayfarer", 98],
+      ["Retangular Fino", 96],
+      ["Geométrico", 94],
+    ],
+    avoid: [["Redondo", 53]],
+    reason: "Aros pequenos e circulares repetem a curva das bochechas.",
+  },
+  {
+    name: "Camila",
+    face: "Triangular",
+    src: "assets/modelo.webp",
+    fit: { x: 50, y: 42.2, size: 34, angle: -0.6 },
+    diagnosis:
+      "A mandíbula de Camila é mais larga que a testa. As pontas do gatinho, o topo do Clubmaster e a ponte dupla do aviador levam o destaque para os olhos.",
+    matches: [
+      ["Gatinho", 98],
+      ["Clubmaster", 97],
+      ["Aviador", 93],
+    ],
+    avoid: [["Retangular Fino", 62]],
+    reason:
+      "Modelos baixos e estreitos dão pouco destaque à parte superior do rosto.",
+  },
+  {
+    name: "Mariana",
+    face: "Oval",
+    src: "assets/mariana.webp",
+    fit: { x: 50.45, y: 41.9, size: 35.4, angle: -1.2 },
+    diagnosis:
+      "As proporções equilibradas de Mariana acomodam bem o Wayfarer. O gatinho destaca as maçãs do rosto, e as linhas geométricas contrastam com o contorno suave.",
+    matches: [
+      ["Wayfarer", 98],
+      ["Gatinho", 96],
+      ["Geométrico", 94],
+    ],
+    avoid: [["Redondo", 70]],
+    reason:
+      "Aros redondos muito pequenos podem acentuar o comprimento do rosto.",
+  },
 ];
-$("#sliders").innerHTML = ranges
-  .map(
-    ([id, title, min, max, val, unit]) =>
-      `<label class="slider">${title}<input id="${id}" type="range" min="${min}" max="${max}" value="${val}"><output id="${id}Out">${val}${unit}</output></label>`,
-  )
-  .join("");
-function draw() {
-  const src = stream && video.readyState >= 2 ? video : photo;
-  ctx.clearRect(0, 0, 800, 680);
-  $("#emptyMirror").hidden = !!src;
-  if (!src) return;
-  const w = src.videoWidth || src.naturalWidth || src.width,
-    h = src.videoHeight || src.naturalHeight || src.height;
-  const z = Math.min(800 / w, 680 / h),
-    sw = w * z,
-    sh = h * z;
-  ctx.save();
-  if (src === video) {
-    ctx.translate(800, 0);
-    ctx.scale(-1, 1);
-  }
-  ctx.drawImage(src, (800 - sw) / 2, (680 - sh) / 2, sw, sh);
-  ctx.restore();
-  if (!overlay) return;
-  const width = (sw * +$("#scale").value) / 100;
-  ctx.save();
-  ctx.translate(
-    400 + (sw * +$("#horizontal").value) / 100,
-    340 + sh * (+$("#vertical").value / 100 - 0.06),
-  );
-  ctx.rotate((+$("#rotation").value * Math.PI) / 180);
-  ctx.drawImage(overlay, -width / 2, -width * 0.26, width, width * 0.52);
-  ctx.restore();
+let activePortrait = portraits.find((p) => p.name === "Camila");
+const demoPicker = $("#demoPicker");
+for (const portrait of portraits) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.dataset.portrait = portrait.name;
+  button.innerHTML = `<img alt=""><span><b>${portrait.name}</b><small>${portrait.face}</small></span>`;
+  portrait.image = button.querySelector("img");
+  portrait.image.addEventListener("load", () => {
+    if (source === "demo" && activePortrait === portrait) draw();
+  });
+  portrait.image.src = portrait.src;
+  button.onclick = () => selectPortrait(portrait);
+  demoPicker.append(button);
 }
-function refreshOverlay() {
-  const img = new Image();
+function selectPortrait(portrait) {
+  ++mediaVersion;
+  pendingChoice = false;
+  stopCamera();
+  $("#camera").disabled = false;
+  activePortrait = portrait;
+  source = "demo";
+  showSource();
+  resetFit();
+  setFace(portrait.face, portrait);
+  message("");
+}
+const message = (text) => ($("#status").textContent = text);
+const controls = [
+  { key: "size", name: "Tamanho", min: 12, max: 120, step: 2, unit: "%" },
+  { key: "y", name: "Posição vertical", min: 0, max: 100, step: 1, unit: "%" },
+  {
+    key: "x",
+    name: "Posição horizontal",
+    min: 0,
+    max: 100,
+    step: 1,
+    unit: "%",
+  },
+  { key: "angle", name: "Rotação", min: -90, max: 90, step: 2, unit: "°" },
+];
+let fit = {};
+function resetFit() {
+  fit =
+    source === "demo"
+      ? { ...activePortrait.fit }
+      : { x: 50, y: 43, size: 53, angle: 0 };
+  syncControls();
+}
+function syncControls() {
+  for (const { key, unit } of controls) {
+    $("#value-" + key).value = fit[key] + unit;
+  }
+  draw();
+}
+function currentImage() {
+  return source === "video" && video.readyState >= 2
+    ? video
+    : source === "photo"
+      ? photo
+      : activePortrait.image;
+}
+function imageSize(img) {
+  if (img instanceof HTMLImageElement)
+    return [img.naturalWidth, img.naturalHeight];
+  return [
+    img.videoWidth || img.naturalWidth || img.width,
+    img.videoHeight || img.naturalHeight || img.height,
+  ];
+}
+function imageBox(img, width, height) {
+  const [w, h] = imageSize(img);
+  const zoom = (source === "demo" ? Math.max : Math.min)(width / w, height / h);
+  return {
+    w: w * zoom,
+    h: h * zoom,
+    left: (width - w * zoom) / 2,
+    top: (height - h * zoom) / 2,
+  };
+}
+function compose(target, showFrame) {
+  const img = currentImage();
+  if (!img || !imageSize(img)[0]) {
+    target.getContext("2d").clearRect(0, 0, target.width, target.height);
+    return;
+  }
+  const c = target.getContext("2d"),
+    w = target.width,
+    h = target.height;
+  const box = imageBox(img, w, h);
+  c.fillStyle = source === "demo" ? "#caaac1" : "#eeeaf3";
+  c.fillRect(0, 0, w, h);
+  c.save();
+  if (source === "video") {
+    c.translate(w, 0);
+    c.scale(-1, 1);
+  }
+  c.drawImage(img, box.left, box.top, box.w, box.h);
+  c.restore();
+  if (!showFrame || !overlay) return;
+  const fw = (box.w * fit.size) / 100;
+  c.save();
+  c.translate(
+    box.left + (box.w * fit.x) / 100,
+    box.top + (box.h * fit.y) / 100,
+  );
+  c.rotate((fit.angle * Math.PI) / 180);
+  c.drawImage(overlay, -fw / 2, -fw * 0.26, fw, fw * 0.52);
+  c.restore();
+}
+function draw() {
+  compose(canvas, !comparing);
+}
+function snapshot(withFrame = true) {
+  const img = currentImage(),
+    [w, h] = imageSize(img),
+    factor = Math.min(1, 1600 / Math.max(w, h));
+  const out = document.createElement("canvas");
+  out.width = Math.max(1, Math.round(w * factor));
+  out.height = Math.max(1, Math.round(h * factor));
+  compose(out, withFrame);
+  return out;
+}
+new ResizeObserver(() => {
+  const r = $(".stage").getBoundingClientRect();
+  canvas.width = 1320;
+  canvas.height = Math.max(1, Math.round((1320 * r.height) / r.width));
+  draw();
+}).observe($(".stage"));
+function refreshFrame() {
+  const version = ++overlayVersion,
+    img = new Image();
   overlay = null;
-  const myToken = ++token;
+  $("#savePhoto").disabled = $("#choose").disabled = true;
+  $("#caption").textContent = style.name;
+  $("#capColor").textContent = $("#materialName").textContent = material;
   img.onload = () => {
-    if (myToken === token) {
-      overlay = img;
-      draw();
-    }
+    if (version !== overlayVersion) return;
+    overlay = img;
+    draw();
+    $("#savePhoto").disabled = $("#choose").disabled = false;
   };
   img.src =
     "data:image/svg+xml;charset=utf-8," +
-    encodeURIComponent(frame(selected, colors[selected], true));
+    encodeURIComponent(frame(style.id, material, true));
 }
-function refreshControls() {
-  for (const [id, , , , , unit] of ranges)
-    $("#" + id + "Out").textContent = $("#" + id).value + unit;
+function selectStyle(name) {
+  style = styles.find((s) => s.name === name);
+  $$("[data-style]").forEach((b) =>
+    b.setAttribute("aria-pressed", b.dataset.style === name),
+  );
+  refreshFrame();
+}
+$("#styleGrid").innerHTML = styles
+  .map(
+    (s) =>
+      `<button class="style-tile" data-style="${s.name}" aria-pressed="${s === style}" title="Experimentar ${s.name}">${frame(s.id, s.sample)}<span>${s.name}</span></button>`,
+  )
+  .join("");
+$("#styleGrid").onclick = (e) => {
+  const b = e.target.closest("[data-style]");
+  if (b) selectStyle(b.dataset.style);
+};
+$("#materials").innerHTML = Object.entries(palette)
+  .map(
+    ([name, c]) =>
+      `<button class="swatch" data-material="${name}" aria-label="${name}" aria-pressed="${material === name}" title="${name}" style="--color:${c}"></button>`,
+  )
+  .join("");
+$("#materials").onclick = (e) => {
+  const b = e.target.closest("[data-material]");
+  if (!b) return;
+  material = b.dataset.material;
+  $$(".swatch").forEach((el) => el.setAttribute("aria-pressed", el === b));
+  refreshFrame();
+};
+$("#controls").innerHTML = controls
+  .map(
+    ({ key, name }) =>
+      `<div class="adjust-row" data-key="${key}"><span>${name}</span><button data-delta="-1" aria-label="Diminuir ${name.toLowerCase()}">−</button><output id="value-${key}"></output><button data-delta="1" aria-label="Aumentar ${name.toLowerCase()}">+</button></div>`,
+  )
+  .join("");
+$("#controls").onclick = (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const { key, step, min, max } = controls.find(
+    (c) => c.key === b.parentNode.dataset.key,
+  );
+  fit[key] = Math.max(
+    min,
+    Math.min(max, fit[key] + Number(b.dataset.delta) * step),
+  );
+  syncControls();
+};
+$("#reset").onclick = resetFit;
+let drag = null;
+canvas.onpointerdown = (e) => {
+  canvas.setPointerCapture(e.pointerId);
+  drag = { x: e.clientX, y: e.clientY, fitX: fit.x, fitY: fit.y };
+};
+canvas.onpointermove = (e) => {
+  if (!drag) return;
+  const r = canvas.getBoundingClientRect(),
+    img = currentImage();
+  if (!img || !imageSize(img)[0]) return;
+  const box = imageBox(img, r.width, r.height);
+  fit.x = Math.max(
+    0,
+    Math.min(100, Math.round(drag.fitX + ((e.clientX - drag.x) * 100) / box.w)),
+  );
+  fit.y = Math.max(
+    0,
+    Math.min(100, Math.round(drag.fitY + ((e.clientY - drag.y) * 100) / box.h)),
+  );
+  syncControls();
+};
+canvas.onlostpointercapture = () => (drag = null);
+const compare = $("#compare");
+function compareMode(value) {
+  comparing = value;
+  compare.setAttribute("aria-pressed", value);
   draw();
 }
-$("#sliders").oninput = refreshControls;
-$("#reset").onclick = () => {
-  ranges.forEach(([id, , , , val]) => ($("#" + id).value = val));
-  refreshControls();
+compare.onpointerdown = (e) => {
+  compare.setPointerCapture(e.pointerId);
+  compareMode(true);
 };
-$("#model").innerHTML = models
-  .map((m) => `<option value="${m.id}">${m.name} · ${m.shape}</option>`)
-  .join("");
-$("#model").onchange = () => {
-  selected = Number($("#model").value);
-  refreshOverlay();
+compare.onpointerup =
+  compare.onlostpointercapture =
+  compare.onpointercancel =
+  compare.onblur =
+    () => compareMode(false);
+compare.onkeydown = (e) => {
+  if ([" ", "Enter"].includes(e.key)) {
+    e.preventDefault();
+    compareMode(true);
+  }
 };
-function openStudio(id = selected) {
-  selected = id;
-  $("#model").value = id;
-  $("#studio").showModal();
-  refreshOverlay();
-}
-$$("[data-open]").forEach((b) => (b.onclick = () => openStudio()));
-$("#featured").onclick = () => openStudio(1);
-function setFace(value) {
-  face = value;
-  $("#shape").value = value;
-  $("#rec").textContent = value
-    ? "Rosto " + value + " — " + reasons[value]
-    : "Envie uma selfie para simular a análise facial ou selecione seu formato.";
-  renderProducts();
-}
-function cancelAnalysis() {
-  clearInterval(timer);
-  $("#analysis").hidden = true;
-}
-$("#shape").onchange = () => {
-  cancelAnalysis();
-  setFace($("#shape").value);
+compare.onkeyup = (e) => {
+  if ([" ", "Enter"].includes(e.key)) compareMode(false);
 };
-function analyze(src) {
-  cancelAnalysis();
-  const tiny = document.createElement("canvas");
-  tiny.width = tiny.height = 16;
-  const tc = tiny.getContext("2d");
-  tc.drawImage(src, 0, 0, 16, 16);
-  const px = tc.getImageData(0, 0, 16, 16).data;
-  let sum = 0;
-  for (let i = 0; i < px.length; i += 4) sum += px[i] + px[i + 1];
-  const suggestion = Object.keys(reasons)[sum % 5];
-  let pct = 0;
-  $("#analysis").hidden = false;
-  $("#progress").value = 0;
-  timer = setInterval(() => {
-    pct += 10;
-    $("#progress").value = pct;
-    if (pct === 100) {
-      cancelAnalysis();
-      setFace(suggestion);
-      $("#status").textContent =
-        "Análise simulada concluída. Você pode corrigir o formato sugerido.";
-    }
-  }, 120);
+window.addEventListener("blur", () => compareMode(false));
+$("#savePhoto").onclick = () => {
+  if (!overlay || !imageSize(currentImage())[0]) return;
+  snapshot().toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob),
+      a = document.createElement("a");
+    a.href = url;
+    a.download = "coloqueAI-" + style.name + ".png";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+    message("Foto com a armação salva em PNG.");
+  }, "image/png");
+};
+function showSource() {
+  for (const b of demoPicker.children)
+    b.setAttribute(
+      "aria-pressed",
+      source === "demo" && b.dataset.portrait === activePortrait.name,
+    );
+  $("#sourceName").textContent = {
+    demo: "Demonstração · " + activePortrait.name,
+    video: "Câmera ao vivo",
+    photo: "Sua selfie",
+  }[source];
+  $("#camera span").textContent = stream ? "Tirar foto" : "Abrir câmera";
+  $("#stopCam").hidden = !stream;
 }
-function stopStream() {
-  cancelAnimationFrame(anim);
-  if (stream) stream.getTracks().forEach((t) => t.stop());
+function stopCamera() {
+  cancelAnimationFrame(animation);
+  stream?.getTracks().forEach((t) => t.stop());
   stream = null;
   video.srcObject = null;
-  $("#camera").innerHTML = "<i>" + icon("camera") + "</i>Abrir câmera";
-  $("#camera").disabled = false;
+  if (source === "video") {
+    source = photo ? "photo" : "demo";
+    if (source === "demo") setFace(activePortrait.face, activePortrait);
+    resetFit();
+  }
+  showSource();
 }
 function live() {
+  if (source !== "video") return;
   draw();
-  if (stream) anim = requestAnimationFrame(live);
+  animation = requestAnimationFrame(live);
 }
-const message = (s) => ($("#status").textContent = s);
+function capture() {
+  const shot = snapshot(false),
+    adjusted = { ...fit };
+  stopCamera();
+  source = "photo";
+  photo = shot;
+  setFace("");
+  fit = adjusted;
+  syncControls();
+  showSource();
+}
 $("#camera").onclick = async () => {
-  if (stream) {
-    if (video.readyState < 2) return;
-    const shot = document.createElement("canvas");
-    shot.width = video.videoWidth;
-    shot.height = video.videoHeight;
-    const c = shot.getContext("2d");
-    c.translate(shot.width, 0);
-    c.scale(-1, 1);
-    c.drawImage(video, 0, 0);
-    photo = shot;
-    stopStream();
-    draw();
-    analyze(photo);
-    message("Foto capturada. Análise simulada em andamento.");
+  if (stream && source === "video") {
+    capture();
+    openGuide();
     return;
   }
-  const current = ++job;
-  cancelAnalysis();
+  const version = ++mediaVersion;
   $("#camera").disabled = true;
   try {
-    if (!navigator.mediaDevices?.getUserMedia) throw Error();
     const media = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user" },
       audio: false,
     });
-    if (current !== job) {
+    if (version !== mediaVersion) {
       media.getTracks().forEach((t) => t.stop());
       return;
     }
     stream = media;
     video.srcObject = media;
     await video.play();
-    if (current !== job) return;
-    $("#camera").textContent = "Tirar foto";
+    if (version !== mediaVersion) return;
+    source = "video";
+    setFace("");
+    resetFit();
+    showSource();
     live();
     message(
-      "Ajuste a armação ao vivo ou tire uma foto para simular a análise.",
+      "Câmera ao vivo. Arraste a armação para alinhar aos olhos ou tire uma foto para identificar seu formato.",
     );
   } catch {
-    if (current === job) {
-      stopStream();
-      draw();
+    if (version === mediaVersion) {
+      stopCamera();
       message(
-        "Câmera indisponível. Verifique a permissão, use HTTPS ou envie uma selfie.",
+        "Não foi possível abrir a câmera. Permita o acesso por HTTPS ou envie uma selfie.",
       );
     }
   } finally {
-    if (current === job) $("#camera").disabled = false;
+    if (version === mediaVersion) $("#camera").disabled = false;
   }
 };
+$("#stopCam").onclick = () => {
+  ++mediaVersion;
+  stopCamera();
+  message("Câmera desligada.");
+};
+window.addEventListener("pagehide", () => {
+  ++mediaVersion;
+  stopCamera();
+});
+$("#upload").onclick = () => $("#file").click();
 $("#file").onchange = async (e) => {
-  const f = e.target.files[0];
-  if (!f) return;
-  const current = ++job;
-  stopStream();
-  cancelAnalysis();
-  const url = URL.createObjectURL(f);
+  const file = e.target.files[0];
+  if (!file) return;
+  const version = ++mediaVersion;
+  stopCamera();
+  $("#camera").disabled = false;
+  const url = URL.createObjectURL(file);
   try {
     const img = new Image();
     img.src = url;
     await img.decode();
-    if (current !== job) return;
+    if (version !== mediaVersion) return;
     photo = img;
-    draw();
-    message("Selfie carregada. Análise simulada em andamento.");
-    analyze(img);
+    source = "photo";
+    setFace("");
+    resetFit();
+    showSource();
+    message("Selfie carregada. Compare seu contorno com os formatos do guia.");
+    openGuide();
   } catch {
-    if (current === job)
+    if (version === mediaVersion)
       message(
-        "Não foi possível ler a imagem. Escolha uma foto em JPG, PNG ou WebP.",
+        "Não foi possível ler essa foto. Tente uma imagem JPG, PNG ou WebP.",
       );
   } finally {
     URL.revokeObjectURL(url);
     e.target.value = "";
   }
 };
-$("#studio").addEventListener("close", () => {
-  ++job;
-  stopStream();
-  draw();
-});
-const lenses = {
-  "Sem grau": 0,
-  "Grau básico": 80,
-  "Filtro luz azul": 60,
-  "Solar polarizada": 100,
-};
-let cart = [];
-try {
-  const saved = JSON.parse(localStorage.getItem("coloqueai.cart") || "[]");
-  if (Array.isArray(saved))
-    cart = saved.filter(
-      (i) =>
-        Number.isInteger(i.id) &&
-        models[i.id]?.colors.includes(i.color) &&
-        Object.hasOwn(lenses, i.lens) &&
-        Number.isInteger(i.qty) &&
-        i.qty > 0,
-    );
-} catch {}
-const amount = (i) => (models[i.id].price + lenses[i.lens]) * i.qty;
-const subtotal = () => cart.reduce((sum, i) => sum + amount(i), 0);
-function persist() {
-  try {
-    localStorage.setItem("coloqueai.cart", JSON.stringify(cart));
-  } catch {}
-  renderCart();
+function openGuide() {
+  if (!imageSize(currentImage())[0]) return;
+  $("#reference").src = snapshot(false).toDataURL("image/jpeg", 0.77);
+  $("#guide").showModal();
 }
-function addItem(id) {
-  const same = cart.find(
-    (i) => i.id === id && i.color === colors[id] && i.lens === "Sem grau",
-  );
-  if (same) same.qty++;
-  else cart.push({ id, color: colors[id], lens: "Sem grau", qty: 1 });
-  persist();
-  closeDialogs();
-  $("#cart").showModal();
-}
-function renderCart() {
-  $("#count").textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-  $("#bagBtn").setAttribute(
-    "aria-label",
-    "Abrir carrinho, " + $("#count").textContent + " itens",
-  );
-  $("#cartItems").innerHTML = cart.length
-    ? cart
-        .map(
-          (i, k) =>
-            `<article class="item" data-index="${k}"><div class="item-art">${frame(i.id, i.color)}</div><div><h3>${models[i.id].name}</h3><p class="muted">${i.color} · ${money(models[i.id].price)} por armação</p><label class="muted">Tipo de lente<select>${Object.entries(
-              lenses,
-            )
-              .map(
-                ([l, extra]) =>
-                  `<option value="${l}" ${l === i.lens ? "selected" : ""}>${l}${extra ? " (+ " + money(extra) + ")" : ""}</option>`,
-              )
-              .join(
-                "",
-              )}</select></label><div class="qty"><div><button aria-label="Diminuir quantidade" data-op="less">−</button><span>${i.qty}</span><button aria-label="Aumentar quantidade" data-op="more">+</button></div><button class="remove" data-op="remove">Remover</button></div><p class="price">${money(amount(i))}</p></div></article>`,
-        )
-        .join("")
-    : '<div class="empty-cart"><i>' +
-      icon("bag") +
-      '</i><h3>Seu carrinho está vazio</h3><button class="btn solid" id="browse">Explorar catálogo</button></div>';
-  $("#cartFoot").innerHTML = cart.length
-    ? `<div class="total"><span>Subtotal</span><strong>${money(subtotal())}</strong></div><button class="btn solid wide" id="pay">Finalizar pedido <i>${icon("arrow")}</i></button>`
+$("#shapes").innerHTML = Object.entries(profiles)
+  .map(
+    ([name, p]) =>
+      `<button class="shape" data-face="${name}"><svg viewBox="0 0 42 55" aria-hidden="true"><path d="${p.contour}" fill="#ece4fc" stroke="currentColor" stroke-width="2"/><path d="M10 22l5-1m10 0 5 1m-10 2-1 6h3m-6 6q4 2 8 0" stroke="currentColor" fill="none" stroke-linecap="round"/></svg><span><b>${name}</b><small>${p.hint}</small></span></button>`,
+  )
+  .join("");
+function setFace(name, portrait = null) {
+  face = name;
+  const p = portrait || profiles[name];
+  $("#results").hidden = !p;
+  $("#openGuide").innerHTML =
+    (p ? "Alterar formato" : "Identificar meu formato") +
+    " <i>" +
+    icon("arrow") +
+    "</i>";
+  $("#diagnosisLead").textContent = p
+    ? "Rosto " + name.toLowerCase() + " · " + p.diagnosis
+    : "Identifique o formato do seu rosto e descubra quais armações valorizam seus traços.";
+  $("#results").innerHTML = p
+    ? `<div class="result-grid"><div><h3>Estilos recomendados</h3><div class="matches">${p.matches.map(([s, n]) => `<button data-match="${s}" aria-label="Experimentar ${s}, ${n}% de compatibilidade">${s}<strong>${n}%</strong></button>`).join("")}</div><p class="small-note">Compatibilidade de estilo estimada para este formato.</p></div><div><h3>Estilos a evitar</h3>${portrait ? `<ul class="avoid-scores">${portrait.avoid.map(([s, n]) => `<li>${s} <strong>${n}%</strong></li>`).join("")}</ul><p>${portrait.reason}</p>` : `<p>${p.avoid}</p>`}</div></div>`
     : "";
-  if ($("#browse"))
-    $("#browse").onclick = () => {
-      $("#cart").close();
-      $("#catalogo").scrollIntoView();
-    };
-  if ($("#pay"))
-    $("#pay").onclick = () => {
-      $("#orderSummary").innerHTML =
-        "<strong>Resumo do pedido</strong>" +
-        cart
-          .map(
-            (i) =>
-              `<p>${i.qty} × ${models[i.id].name} · ${i.color} · ${i.lens} — ${money(amount(i))}</p>`,
-          )
-          .join("") +
-        '<div class="total">Total <strong>' +
-        money(subtotal()) +
-        "</strong></div>";
-      $("#cart").close();
-      $("#checkout").showModal();
-    };
 }
-$("#cartItems").onchange = (e) => {
-  if (!e.target.matches("select")) return;
-  const i = cart[+e.target.closest("article").dataset.index];
-  i.lens = e.target.value;
-  const duplicate = cart.find(
-    (x) => x !== i && x.id === i.id && x.color === i.color && x.lens === i.lens,
-  );
-  if (duplicate) {
-    duplicate.qty += i.qty;
-    cart = cart.filter((x) => x !== i);
+$("#results").onclick = (e) => {
+  const b = e.target.closest("[data-match]");
+  if (b) {
+    selectStyle(b.dataset.match);
+    $("#provador").scrollIntoView();
   }
-  persist();
 };
-$("#cartItems").onclick = (e) => {
-  const b = e.target.closest("[data-op]");
+$("#openGuide").onclick = () => {
+  pendingChoice = false;
+  openGuide();
+};
+$("#shapes").onclick = (e) => {
+  const b = e.target.closest("[data-face]");
   if (!b) return;
-  const k = +b.closest("article").dataset.index;
-  if (b.dataset.op === "more") cart[k].qty++;
-  else if (b.dataset.op === "remove" || cart[k].qty === 1) cart.splice(k, 1);
-  else cart[k].qty--;
-  persist();
+  setFace(b.dataset.face);
+  const finish = pendingChoice;
+  pendingChoice = false;
+  $("#guide").close();
+  if (finish) saveChoice();
+  else {
+    $("#diagnostico").scrollIntoView();
+    message(
+      "Diagnóstico pronto. Toque em um estilo recomendado para experimentar.",
+    );
+  }
 };
-$("#bagBtn").onclick = () => $("#cart").showModal();
-$("#studioBuy").onclick = () => addItem(selected);
-$("#delivery").onsubmit = (e) => {
-  e.preventDefault();
-  cart = [];
-  persist();
-  e.target.reset();
-  $("#checkout").close();
-  $("#success").showModal();
+$$("[data-close]").forEach(
+  (b) => (b.onclick = () => b.closest("dialog").close()),
+);
+$("#guide").addEventListener("close", () => (pendingChoice = false));
+const storageKey = "coloqueai.estilo.v1";
+try {
+  const record = JSON.parse(localStorage.getItem(storageKey));
+  if (
+    record &&
+    styles.some((s) => s.name === record.style) &&
+    Object.hasOwn(palette, record.material) &&
+    Object.hasOwn(profiles, record.face) &&
+    typeof record.image === "string" &&
+    record.image.startsWith("data:image/jpeg;base64,")
+  )
+    saved = record;
+} catch {}
+function openChoice() {
+  $("#choiceStatus").textContent = "";
+  const box = $("#choiceBody");
+  if (saved) {
+    box.innerHTML = `<img alt="Sua foto com a armação escolhida"><dl class="choice-data"><div><dt>Estilo</dt><dd>${saved.style}</dd></div><div><dt>Cor e material</dt><dd>${saved.material}</dd></div><div><dt>Formato do rosto</dt><dd>${saved.face}</dd></div></dl><div class="choice-actions"><button class="primary" id="copy"><i>${icon("copy")}</i>Copiar resumo</button><button class="outline" id="share"><i>${icon("share")}</i>Enviar escolha</button></div>`;
+    box.querySelector("img").src = saved.image;
+    $("#copy").onclick = copyChoice;
+    $("#share").onclick = shareChoice;
+  } else {
+    box.innerHTML =
+      '<p class="choice-note">Experimente as armações no espelho e toque em “Escolher este estilo” para guardar sua foto e os detalhes aqui.</p><div class="choice-actions"><button class="primary" id="back">Ir ao provador</button></div>';
+    $("#back").onclick = () => {
+      $("#choice").close();
+      $("#provador").scrollIntoView();
+    };
+  }
+  $("#choice").showModal();
+}
+function saveChoice() {
+  if (!overlay) return;
+  saved = {
+    style: style.name,
+    material,
+    face,
+    image: snapshot().toDataURL("image/jpeg", 0.86),
+  };
+  let persisted = true;
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(saved));
+  } catch {
+    persisted = false;
+  }
+  openChoice();
+  $("#choiceStatus").textContent = persisted
+    ? "Escolha salva neste navegador."
+    : "Escolha disponível nesta sessão. Copie ou envie o resumo para guardá-lo.";
+}
+$("#choose").onclick = () => {
+  if (source === "demo") {
+    $("#choiceBody").innerHTML =
+      '<p class="choice-note">Use uma selfie para guardar uma foto sua com a armação escolhida.</p><div class="choice-actions"><button class="primary" id="addSelfie">Enviar selfie</button><button class="outline" id="addCamera">Abrir câmera</button></div>';
+    $("#choiceStatus").textContent = "";
+    $("#choice").showModal();
+    $("#addSelfie").onclick = () => {
+      $("#choice").close();
+      pendingChoice = true;
+      $("#file").click();
+    };
+    $("#addCamera").onclick = () => {
+      $("#choice").close();
+      pendingChoice = true;
+      $("#camera").click();
+    };
+    return;
+  }
+  if (source === "video") capture();
+  if (!face) {
+    pendingChoice = true;
+    openGuide();
+    return;
+  }
+  saveChoice();
 };
-$("#success").addEventListener("close", () => $("#catalogo").scrollIntoView());
-renderProducts();
-renderCart();
+$("#myChoice").onclick = openChoice;
+function summaryText() {
+  return `Meu estilo escolhido no coloqueAI\nArmação: ${saved.style}\nCor e material: ${saved.material}\nFormato do rosto: ${saved.face}`;
+}
+async function copyChoice() {
+  try {
+    await navigator.clipboard.writeText(summaryText());
+    $("#choiceStatus").textContent =
+      "Resumo copiado. Cole na conversa para enviar sua escolha.";
+  } catch {
+    if (!$("#manualCopy"))
+      $("#choiceBody").insertAdjacentHTML(
+        "beforeend",
+        '<textarea id="manualCopy" aria-label="Resumo da escolha" readonly rows="4"></textarea>',
+      );
+    $("#manualCopy").value = summaryText();
+    $("#manualCopy").select();
+    $("#choiceStatus").textContent =
+      "Copie o texto selecionado para compartilhar.";
+  }
+}
+async function shareChoice() {
+  if (!navigator.share) {
+    await copyChoice();
+    return;
+  }
+  try {
+    const data = { title: "Meu estilo escolhido", text: summaryText() };
+    const bytes = Uint8Array.from(atob(saved.image.split(",")[1]), (c) =>
+      c.charCodeAt(0),
+    );
+    const file = new File([bytes], "meu-estilo-coloqueAI.jpg", {
+      type: "image/jpeg",
+    });
+    if (navigator.canShare?.({ files: [file] })) data.files = [file];
+    await navigator.share(data);
+    $("#choiceStatus").textContent = "Escolha compartilhada.";
+  } catch (e) {
+    if (e.name !== "AbortError") await copyChoice();
+  }
+}
+const navLinks = $$("nav a");
+function markNav(id) {
+  for (const a of navLinks) {
+    a.classList.toggle("active", a.hash === id);
+    if (a.hash === id) a.setAttribute("aria-current", "location");
+    else a.removeAttribute("aria-current");
+  }
+}
+navLinks.forEach((a) => (a.onclick = () => markNav(a.hash)));
+function updateNavigation() {
+  const reachedGuide =
+    window.scrollY > 60 &&
+    $("#diagnostico").getBoundingClientRect().bottom <= innerHeight + 20;
+  markNav(reachedGuide ? "#diagnostico" : "#provador");
+}
+window.addEventListener("scroll", updateNavigation, { passive: true });
+updateNavigation();
+selectPortrait(activePortrait);
+refreshFrame();
